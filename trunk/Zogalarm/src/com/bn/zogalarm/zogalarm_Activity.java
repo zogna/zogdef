@@ -20,6 +20,7 @@ public class zogalarm_Activity extends Activity
 	SoundPool sp; // 声明SoundPool的引用
 	int currStreamId;// 当前正播放的streamId
 	int soundId;
+	private boolean SoundrunFlag = false;
 
 	private Camera camera;
 	private FlashUpdater flashupdater;
@@ -83,27 +84,36 @@ public class zogalarm_Activity extends Activity
 	public void SoundOn()
 	{ // 获取AudioManager引用
 
-		// 1.0即为最大音量
-		float maxsound = 1.0f;
-		// 无限播放
-		int unlimitplay = -1;
-		// 设置成最大声
-		AudioManager am = (AudioManager) this
-				.getSystemService(Context.AUDIO_SERVICE);
-		;
-		int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-		// 最大音量值
-		am.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume,
-				AudioManager.FLAG_PLAY_SOUND);
+		if (false == this.SoundrunFlag)
+		{
+			// 1.0即为最大音量
+			float maxsound = 1.0f;
+			// 无限播放
+			int unlimitplay = -1;
+			// 设置成最大声
+			AudioManager am = (AudioManager) this
+					.getSystemService(Context.AUDIO_SERVICE);
+			;
+			int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+			// 最大音量值
+			am.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume,
+					AudioManager.FLAG_PLAY_SOUND);
 
-		// 调用SoundPool的play方法来播放声音文件 可以强制最大音量
-		currStreamId = sp.play(soundId, maxsound, maxsound, 1, unlimitplay,
-				1.0f);
+			// 调用SoundPool的play方法来播放声音文件 可以强制最大音量
+			currStreamId = sp.play(soundId, maxsound, maxsound, 1, unlimitplay,
+					1.0f);
+
+			this.SoundrunFlag = true;
+		}
 	}
 
 	public void SoundOff()
 	{
-		sp.stop(currStreamId); // 停止正在播放的某个声音
+		if (this.SoundrunFlag)
+		{
+			sp.stop(currStreamId); // 停止正在播放的某个声音
+			this.SoundrunFlag = false;
+		}
 	}
 
 	// 闪光灯
@@ -131,9 +141,12 @@ public class zogalarm_Activity extends Activity
 		 * camera.setParameters(param);
 		 */
 		// 线程开启
-		this.flashupdater = new FlashUpdater();
-		this.flashrunFlag = true;
-		this.flashupdater.start();
+		if (false == this.flashrunFlag)
+		{
+			this.flashupdater = new FlashUpdater();
+			this.flashrunFlag = true;
+			this.flashupdater.start();
+		}
 	}
 
 	// 关闭
@@ -182,11 +195,11 @@ public class zogalarm_Activity extends Activity
 					param.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
 					camera.setParameters(param);
 					//
-					Thread.sleep(50);
+					Thread.sleep(40);
 					param.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
 					camera.setParameters(param);
 					// 必须休眠，不然无法接收到消息
-					Thread.sleep(50);
+					Thread.sleep(40);
 					Log.d("aa", "run");
 				} catch (InterruptedException e)
 				{
