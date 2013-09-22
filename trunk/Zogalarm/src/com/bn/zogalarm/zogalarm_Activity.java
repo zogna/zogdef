@@ -1,13 +1,21 @@
 package com.bn.zogalarm;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import com.bn.zogalarm.R;
 
 import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.net.ConnectivityManager;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,6 +34,9 @@ public class zogalarm_Activity extends Activity
 	private FlashUpdater flashupdater;
 	private boolean flashrunFlag = false;
 
+	private WifiManager wifimanager;
+
+
 	@Override
 	// 重写onCreate方法
 	public void onCreate(Bundle savedInstanceState)
@@ -35,7 +46,10 @@ public class zogalarm_Activity extends Activity
 
 		Soundinit(); // 初始化声音池的方法
 		FlashInit();
+		WifiInit();
+		setMobileDataEnabled(this,true);
 
+		
 		// 按键事件
 		Button b1 = (Button) this.findViewById(R.id.Button01); // 获取播放按钮
 		b1.setOnClickListener // 为播放按钮添加监听器
@@ -93,12 +107,12 @@ public class zogalarm_Activity extends Activity
 			// 设置成最大声
 			AudioManager am = (AudioManager) this
 					.getSystemService(Context.AUDIO_SERVICE);
-			;
-			int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-			// 最大音量值
-			am.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume,
-					AudioManager.FLAG_PLAY_SOUND);
 
+			int maxVolume = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+			/*
+			 * // 最大音量值 am.setStreamVolume(AudioManager.STREAM_MUSIC, maxVolume,
+			 * AudioManager.FLAG_PLAY_SOUND);
+			 */
 			// 调用SoundPool的play方法来播放声音文件 可以强制最大音量
 			currStreamId = sp.play(soundId, maxsound, maxsound, 1, unlimitplay,
 					1.0f);
@@ -201,7 +215,8 @@ public class zogalarm_Activity extends Activity
 					// 必须休眠，不然无法接收到消息
 					Thread.sleep(40);
 					Log.d("aa", "run");
-				} catch (InterruptedException e)
+				}
+				catch (InterruptedException e)
 				{
 					zogalarmactivity.flashrunFlag = false;
 					// 关闭线程以后的关闭闪光灯的操作由外部执行
@@ -211,5 +226,40 @@ public class zogalarm_Activity extends Activity
 			Log.d("aa", "stop");
 		}
 	} // Updater
+
+	public void WifiInit()
+	{
+		/* 以getSystemService取得WIFI_SERVICE */
+		wifimanager = (WifiManager) this.getSystemService(Context.WIFI_SERVICE);
+
+		wifimanager.startScan();
+		/* 尝试打开WiFi服务 */
+		if (!wifimanager.isWifiEnabled())
+		{
+			if (wifimanager.getWifiState() != WifiManager.WIFI_STATE_ENABLING)
+			{
+				wifimanager.setWifiEnabled(true);
+			}
+		}
+	}
+	
+	public int setMobileDataEnabled(Context context, boolean flag)
+	{
+		ConnectivityManager cm = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+		Method setMobileDataEnabl;
+		try
+		{
+			setMobileDataEnabl = cm.getClass().getDeclaredMethod(
+					"setMobileDataEnabled", boolean.class);
+			setMobileDataEnabl.invoke(cm, flag);
+			return 0;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return -1;
+		}
+	}
 
 }
