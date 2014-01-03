@@ -1,8 +1,8 @@
 D:\android\android-ndk-r9b\ndk-build.cmd
 
-D:\android\android-ndk-r9b\platforms\android-9\arch-arm\usr\include
-D:\android\android-ndk-r9b\platforms\android-9\arch-arm\usr\include\SLES
+#include "stdlib.h"
 
+ANDROID
 
 D:\android\android-ndk-r9b\toolchains\arm-linux-androideabi-4.6\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.6\include
 
@@ -11,7 +11,8 @@ D:\android\android-ndk-r9b\sources\android\native_app_glue
 
 
 
-
+D:\android\android-ndk-r9b\sources\cxx-stl\stlport\stlport
+//下面这个 要放在 上面 的下面
 D:\android\android-ndk-r9b\sources\cxx-stl\gnu-libstdc++\4.6\include
 
 
