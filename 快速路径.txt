@@ -4,6 +4,11 @@ D:\android\android-ndk-r9b\ndk-build.cmd
 
 ANDROID
 
+#define BOOST_THREAD_PLATFORM_PTHREAD
+
+D:\android\android-ndk-r9b\platforms\android-15\arch-arm\usr\include
+D:\android\android-ndk-r9b\platforms\android-15\arch-arm\usr\include\SLES
+
 D:\android\android-ndk-r9b\toolchains\arm-linux-androideabi-4.6\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.6\include
 
 
@@ -17,6 +22,8 @@ D:\android\android-ndk-r9b\sources\cxx-stl\gnu-libstdc++\4.6\include
 
 
 
+
+
 D:\android\project\Android NDK Beginners Guide\Chapter06\DroidBlaster_Part6-4\obj\local\armeabi\app_process
 
 
@@ -24,5 +31,4 @@ D:\android\android-ndk-r9b\toolchains\arm-linux-androideabi-4.6\prebuilt\windows
 
 
 
-D:\android\android-ndk-r9b\platforms\android-15\arch-arm\usr\include
-D:\android\android-ndk-r9b\platforms\android-15\arch-arm\usr\include\SLES
+
