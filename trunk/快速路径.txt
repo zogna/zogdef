@@ -1,28 +1,66 @@
 D:\android\android-ndk-r9b\ndk-build.cmd
 
+=====================
+
 #include "stdlib.h"
 
-ANDROID
+=======================
+#define ANDROID 1
 
 #define BOOST_THREAD_PLATFORM_PTHREAD
+==========================
 
+出现 format not a string literal and no format arguments [-Werror=format-security] 错误
+修改Android.mk
+LOCAL_CFLAGS += -Wno-format-security
+==================
+
+In static member function 'static void irr::os::Printer::log(const c8*, irr::ELOG_LEVEL)': error: format not a string literal and no format arguments [-Werror=format-security]
+
+找到的解决方法的问题，在 project/default.propeties，我已更改：
+
+target=android-4
+自
+target=android-18
+
+
+改 os.cpp(inside /jni directory), changing the code from:
+
+    __android_log_print(ANDROID_LOG_INFO, "log", message); 
+to:
+    __android_log_print(ANDROID_LOG_INFO, "log","%s", message); 
+
+
+==================
+
+Box2D编译出错
+<Box2D/Box2D.h>没找到路径
+
+android.MK
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) /Box2D
+改为
+LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH) 
+
+
+==================
 D:\android\android-ndk-r9b\platforms\android-15\arch-arm\usr\include
 D:\android\android-ndk-r9b\platforms\android-15\arch-arm\usr\include\SLES
 
+==================
 D:\android\android-ndk-r9b\toolchains\arm-linux-androideabi-4.6\prebuilt\windows\lib\gcc\arm-linux-androideabi\4.6\include
 
 
 D:\android\android-ndk-r9b\sources\android\native_app_glue
 
-
-
+D:\android\android-ndk-r9b\sources\android-ndk-profiler
+===============
 D:\android\android-ndk-r9b\sources\cxx-stl\stlport\stlport
 //下面这个 要放在 上面 的下面
 D:\android\android-ndk-r9b\sources\cxx-stl\gnu-libstdc++\4.6\include
 
 
 
-
+=========
 
 D:\android\project\Android NDK Beginners Guide\Chapter06\DroidBlaster_Part6-4\obj\local\armeabi\app_process
 
